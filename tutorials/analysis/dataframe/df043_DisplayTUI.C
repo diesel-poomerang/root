@@ -19,11 +19,11 @@ void df043_DisplayTUI()
 {
    // Setting up a Dataframe with some data
    ROOT::RDataFrame df(100);
-   auto d = df.Define("x", [](ULong64_t e) { return int(e) % 7; })       // A column with ints
-              .Define("y", [](int x) { return 2.5 * x; })                  // A column with doubles
-              .Define("v", [](ULong64_t e) {                               // A column with a collection
+   auto d = df.Define("x", [](ULong64_t e) { return int(e) % 7; }, {"rdfentry_"}) // A column with ints
+              .Define("y", [](int x) { return 2.5 * x; }, {"x"})                    // A column with doubles
+              .Define("v", [](ULong64_t e) {                                         // A column with a collection
                  return std::vector<int>{int(e), int(e) + 1, int(e) + 2};
-              });
+              }, {"rdfentry_"});
 
    // Show all columns of the first 10 events in the interactive viewer
    ROOT::RDF::DisplayTUI(d, "", 10);
