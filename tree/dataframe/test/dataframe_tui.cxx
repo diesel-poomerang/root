@@ -14,7 +14,8 @@ using ROOT::Internal::RDF::RenderRTUITableText;
 TEST(RDataFrameTUI, BuildTableFromDisplay)
 {
    RDataFrame df(4);
-   auto dfXY = df.Define("x", [](ULong64_t e) { return int(e); }).Define("y", [](int x) { return 2.5 * x; });
+   auto dfXY = df.Define("x", [](ULong64_t e) { return int(e); }, {"rdfentry_"})
+                  .Define("y", [](int x) { return 2.5 * x; }, {"x"});
    auto display = dfXY.Display({"x", "y"}, 4);
    const auto table = BuildRTUITable(*display.GetPtr());
 
@@ -31,7 +32,8 @@ TEST(RDataFrameTUI, CollectionsAndDots)
 {
    RDataFrame df(2);
    // Show at most one collection element per row: the second one is rendered as "..."
-   auto dd = df.Define("v", [](ULong64_t e) { return std::vector<int>{int(e), int(e) + 10}; }).Display({"v"}, 2, 1);
+   auto dd = df.Define("v", [](ULong64_t e) { return std::vector<int>{int(e), int(e) + 10}; }, {"rdfentry_"})
+                .Display({"v"}, 2, 1);
    const auto table = BuildRTUITable(*dd.GetPtr());
 
    EXPECT_EQ(table.fColumnNames, (std::vector<std::string>{"Row", "v"}));
@@ -46,7 +48,7 @@ TEST(RDataFrameTUI, CollectionsAndDots)
 TEST(RDataFrameTUI, RenderTextTable)
 {
    RDataFrame df(2);
-   auto dd = df.Define("x", [](ULong64_t e) { return int(e); }).Display({"x"}, 2);
+   auto dd = df.Define("x", [](ULong64_t e) { return int(e); }, {"rdfentry_"}).Display({"x"}, 2);
    const auto table = BuildRTUITable(*dd.GetPtr());
    const std::string text = RenderRTUITableText(table);
 
@@ -61,7 +63,7 @@ TEST(RDataFrameTUI, RenderTextTable)
 TEST(RDataFrameTUI, EmptyDataFrame)
 {
    RDataFrame df(0);
-   auto dd = df.Define("x", [](ULong64_t e) { return int(e); }).Display({"x"}, 5);
+   auto dd = df.Define("x", [](ULong64_t e) { return int(e); }, {"rdfentry_"}).Display({"x"}, 5);
    const auto table = BuildRTUITable(*dd.GetPtr());
 
    EXPECT_EQ(table.fColumnNames, (std::vector<std::string>{"Row", "x"}));
