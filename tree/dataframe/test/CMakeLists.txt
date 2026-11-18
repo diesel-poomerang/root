@@ -67,6 +67,7 @@ ROOT_GENERATE_DICTIONARY(TwoFloats_SnapshotDict ${CMAKE_CURRENT_SOURCE_DIR}/TwoF
 ROOT_ADD_GTEST(dataframe_datasetspec dataframe_datasetspec.cxx LIBRARIES ROOTDataFrame)
 
 ROOT_ADD_GTEST(dataframe_display dataframe_display.cxx LIBRARIES ROOTDataFrame)
+ROOT_ADD_GTEST(dataframe_tui dataframe_tui.cxx LIBRARIES ROOTDataFrame)
 ROOT_ADD_GTEST(dataframe_ranges dataframe_ranges.cxx LIBRARIES ROOTDataFrame)
 ROOT_ADD_GTEST(dataframe_leaves dataframe_leaves.cxx LIBRARIES ROOTDataFrame Physics)
 ROOT_ADD_GTEST(dataframe_resptr dataframe_resptr.cxx LIBRARIES ROOTDataFrame)

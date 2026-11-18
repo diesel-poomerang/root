@@ -89,7 +89,9 @@ set(RDATAFRAME_HEADERS
   ROOT/RDF/RNodeBase.hxx
   ROOT/RDF/RRangeBase.hxx
   ROOT/RDF/RRange.hxx
+  ROOT/RDF/RDFTUI.hxx
   ROOT/RDF/RResultMap.hxx
+  ROOT/RDF/RTUIViewer.hxx
   ROOT/RDF/RSample.hxx
   ROOT/RDF/RFilterWithMissingValues.hxx
   ROOT/RDF/RTreeColumnReader.hxx
@@ -125,6 +127,7 @@ ROOT_STANDARD_LIBRARY_PACKAGE(ROOTDataFrame
     src/RDFCustomLoaderHelpers.cxx
     src/RDFColumnReaderUtils.cxx
     src/RDFDisplay.cxx
+    src/RDFTUIViewer.cxx
     src/RDFGraphUtils.cxx
     src/RDFHistoModels.cxx
     src/RDFInterfaceUtils.cxx
@@ -199,5 +202,24 @@ endif()
 target_include_directories(ROOTDataFrame PRIVATE ../../builtins/exprtk) # hard-coded builtin for lexing
 
 target_link_libraries(ROOTDataFrame PRIVATE nlohmann_json::nlohmann_json)
+
+#---Optional ncurses-based interactive TUI table viewer (DisplayTUI)-----------------------
+if(NOT DEFINED rdf_tui)
+  set(rdf_tui ON) # can be switched off with -Drdf_tui=OFF
+endif()
+if(rdf_tui AND NOT WIN32)
+  find_package(Curses QUIET)
+  if(CURSES_FOUND)
+    target_compile_definitions(ROOTDataFrame PRIVATE ROOT_RDF_TUI_CURSES_ENABLED)
+    target_include_directories(ROOTDataFrame PRIVATE ${CURSES_INCLUDE_DIRS} ${CURSES_INCLUDE_DIR})
+    if(CURSES_LIBRARIES)
+      target_link_libraries(ROOTDataFrame PRIVATE ${CURSES_LIBRARIES})
+    else()
+      target_link_libraries(ROOTDataFrame PRIVATE ncurses)
+    endif()
+  else()
+    message(STATUS "Curses not found: the interactive RDataFrame TUI viewer (DisplayTUI) will print plain-text tables")
+  endif()
+endif()
 
 ROOT_ADD_TEST_SUBDIRECTORY(test)

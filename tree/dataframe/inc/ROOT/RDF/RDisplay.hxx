@@ -320,6 +320,15 @@ public:
    ////////////////////////////////////////////////////////////////////////////
    /// Returns the representation as a string
    std::string AsString(const RPrintOptions &options = {EPrintFormat::kMarkdown}) const;
+
+   ////////////////////////////////////////////////////////////////////////////
+   /// Returns the buffered table of string representations: one row per event, the first row holding the column
+   /// names (the first of which is "Row"). Intended for alternative renderers, e.g. the ncurses-based TUI viewer.
+   const std::vector<std::vector<ROOT::Internal::RDF::RDisplayElement>> &GetTable() const { return fTable; }
+
+   ////////////////////////////////////////////////////////////////////////////
+   /// Returns the width in characters of each column of the table returned by GetTable()
+   const std::vector<unsigned short> &GetColumnWidths() const { return fWidths; }
 };
 
 } // namespace RDF
